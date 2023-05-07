@@ -42,12 +42,23 @@ class Group(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, max_length=100)
     description = Column(String, nullable=True, max_length=300)
-    group_permission = relationship("GroupPermission", back_populates="group")
-    
-class GroupPermission(Base):
-    __tablename__ = "group_permissions"
+    group_role = relationship("GroupRole", back_populates="group")
+   
+class GroupRole(Base):
+    __tablename__ = "group_role"
     id = Column(Integer, primary_key=True, index=True)
+    role = relationship("Role")
     group = relationship("Group")
+class Role(Base):
+    __tablename__ = "role"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False, max_length=100)
+    description = Column(String, nullable=True, max_length=300)
+    role_permission = relationship("RolePermission", back_populates="group") 
+class RolePermission(Base):
+    __tablename__ = "role_permissions"
+    id = Column(Integer, primary_key=True, index=True)
+    role = relationship("Role", back_populates="role_permission")
     permissions = relationship("Permission")
 
 class UserGroup(Base):

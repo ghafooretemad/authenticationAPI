@@ -33,17 +33,6 @@ class Profile(User):
     dob: datetime.date
     class Config:
         orm_mode = True
-    
-class Group(BaseModel):
-    title:str
-    description:str
-    class Config:
-        orm_mode = True
-
-class GroupDetails(Group):
-    id:int
-    class Config:
-        orm_mode = True
 
 class Permission(BaseModel):
     title:str
@@ -56,18 +45,51 @@ class PermissionDetails(Permission):
     class Config:
         orm_mode = True
 
-class GroupPermission(BaseModel):
-    group:int
+class Role(BaseModel):
+    title:str
+    description:str
+    class Config:
+        orm_mode = True
+
+class RoleDetails(Role):
+    id:int
+    class Config:
+        orm_mode = True
+        
+class RolePermission(BaseModel):
+    role:int
     permission:int
     class Config:
         orm_mode = True
 
-class GroupPermissionDetails(GroupPermission):
+class RolePermissionDetails(RolePermission):
     id:int
     class Config:
         orm_mode = True
 
 
+class Group(BaseModel):
+    title:str
+    description:str
+    class Config:
+        orm_mode = True
+
+class GroupDetails(Group):
+    id:int
+    class Config:
+        orm_mode = True
+class GroupRole(BaseModel):
+    group:int
+    role:int
+    class Config:
+        orm_mode = True
+
+class GroupRoleDetails(GroupRole):
+    id:int
+    class Config:
+        orm_mode = True
+    
+    
 class UserGroup(BaseModel):
     group:int
     user:int
