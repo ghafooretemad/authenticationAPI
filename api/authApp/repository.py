@@ -75,7 +75,7 @@ async def get_current_active_user(
     return current_user
 
 
-def create_user(db:Session, user_obj:schemas.CreateUser):
+def create_user(db:Session, user_obj:schemas.createUser):
     hashed_password = get_password_hash(user_obj.password)
     user_obj.hashed_password = hashed_password
     user = models.User(**user_obj)

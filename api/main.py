@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from .authApp.view import router as authRouter
 
 
 description = """
@@ -20,6 +21,11 @@ app = FastAPI(
                        },
               openapi_tags=tags_metadata,
               )
+
+app.include_router(authRouter,
+     prefix= "/users",
+    tags= ["Users"]
+    )
 
 @app.get("/")
 def main():
