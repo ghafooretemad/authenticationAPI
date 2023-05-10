@@ -1,0 +1,3 @@
+sudo pip install fastapi
+sudo pip install "uvicorn[standard]"
+pip install psycopg2
