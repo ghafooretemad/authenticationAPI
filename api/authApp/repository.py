@@ -75,14 +75,21 @@ async def get_current_active_user(
     return current_user
 
 
-def create_user(db:Session, user_obj:schemas.createUser):
-    hashed_password = get_password_hash(user_obj.password)
+def create_user(db:Session, user_obj:schemas.CreateUser, profile_id, department_id):
+    hashed_password = get_password_hash(user_obj.hashed_password)
     user_obj.hashed_password = hashed_password
-    user = models.User(**user_obj)
+    user = models.User(**user_obj.dict(), profile_id=profile_id, department_id=department_id)
     db.add(user)
     db.commit()
     db.refresh(user)
-    return db.user
+    return user
+
+def create_profile(db:Session, profile_obj:schemas.Profile):
+    profile = models.Profile(**profile_obj.dict())
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+    return profile
 
 def get_users(db: Session, skip: int = 0, limit: int = settings.LIMIT):
     users = db.query(models.User).offset(skip).limit(limit).all()

@@ -2,7 +2,6 @@ from pydantic import BaseModel
 import datetime
     
     
-    
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -10,31 +9,14 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
-class User(BaseModel):
-    email: str
-    active: bool
-    deleted: bool
-    deleted_at: datetime.datetime | None = None
-    deleted_by: int | None = None
-    created_at: datetime.datetime
-    created_by: int
-    udpated_at: datetime.datetime|None=None
-    udpated_by: int|None=None
-    profile: int
-    department: int | None = None
 
-class createUser(User):
-    hashed_password: str
+class Department(BaseModel):
+    id:int
+    name:str
     
-class userDetails(User):
-    id: int
-    avatar: str | None = None
-    preference: str | None = None
     class Config:
         orm_mode = True
-
-class Profile(User):
-    hashed_password: str
+class Profile(BaseModel):
     first_name:str
     last_name: str 
     phone: int
@@ -42,6 +24,29 @@ class Profile(User):
     dob: datetime.date
     class Config:
         orm_mode = True
+class User(BaseModel):
+    email: str
+    is_active: bool
+    deleted: bool = False
+    deleted_at: datetime.datetime | None = None
+    deleted_by: int | None = None
+    created_at: datetime.datetime
+    created_by: int|None=None
+    updated_at: datetime.datetime|None=None
+    updated_by: int|None=None
+
+class CreateUser(User):
+    hashed_password: str
+    
+class UserDetails(User):
+    id: int
+    avatar: str | None = None
+    preference: str | None = None
+    profile: Profile|None=None
+    department: Department | None = None
+    class Config:
+        orm_mode = True
+
 
 class Permission(BaseModel):
     title:str
