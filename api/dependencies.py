@@ -5,6 +5,7 @@ class CommonQueryParams:
         self.skip = skip
         self.limit = limit
         
+     
 # DB Coonection Dependency
 def get_db():
     db = SessionLocal()

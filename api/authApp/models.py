@@ -32,7 +32,7 @@ class Profile(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
-    phone = Column(Integer, nullable=False)
+    phone = Column(String, nullable=False)
     address = Column(String, nullable=True)
     dob = Column(Date, nullable=False)
     user = relationship("User", back_populates="profile")

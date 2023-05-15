@@ -7,7 +7,8 @@ from . import schemas, models
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Depends
 from .. import settings
-
+from sqlalchemy import or_, and_
+from .models import User, Profile
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -23,7 +24,7 @@ def get_password_hash(password):
 
 
 def get_user(db:Session, username: str):
-    user = db.query(models.User).filter(models.User.username == username).first()
+    user = db.query(User).filter(User.username == username).first()
     return user
 
 
@@ -78,27 +79,31 @@ async def get_current_active_user(
 def create_user(db:Session, user_obj:schemas.CreateUser, profile_id, department_id):
     hashed_password = get_password_hash(user_obj.hashed_password)
     user_obj.hashed_password = hashed_password
-    user = models.User(**user_obj.dict(), profile_id=profile_id, department_id=department_id)
+    user = User(**user_obj.dict(), profile_id=profile_id, department_id=department_id)
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
 
 def create_profile(db:Session, profile_obj:schemas.Profile):
-    profile = models.Profile(**profile_obj.dict())
+    profile = Profile(**profile_obj.dict())
     db.add(profile)
     db.commit()
     db.refresh(profile)
     return profile
 
-def get_users(db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    users = db.query(models.User).offset(skip).limit(limit).all()
+def get_users(db: Session, skip: int = 0, limit: int = settings.LIMIT, name:str='', email:str='', phone:str='', department:int = 0 ):
+    users = db.query(User).join(Profile).filter(or_(Profile.first_name.contains(name), Profile.last_name.contains(name), User.email.contains(email), Profile.phone.contains(phone), User.department_id == department)).offset(skip).limit(limit).all()
     return users
 
 def get_user_by_email(db:Session, email:str):
-    user = db.query(models.User).filter(models.User.email == email).first()
+    user = db.query(User).filter(User.email == email).first()
     return user
 
 def get_user_by_name(db:Session, name:str):
-    users = db.query(models.User).filter(models.User.name == name)
+    users = db.query(User).join(Profile).filter(or_(Profile.first_name == name, Profile.last_name == name)).all()
     return users
+
+def get_user_by_id(db:Session, id:int):
+    user = db.query(User).filter(User.id == id).first()
+    return user
