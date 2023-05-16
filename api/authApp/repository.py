@@ -3,13 +3,13 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from . import schemas, models
+from api.authApp import schemas
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Depends
-from .. import settings
+from api import settings
 from sqlalchemy import or_, and_
-from .models import User, Profile
-from .dependencies import UserFilterDependency
+from api.authApp.models import User, Profile
+from api.authApp.dependencies import UserFilterDependency
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

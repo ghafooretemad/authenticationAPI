@@ -1,7 +1,8 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Date
 from sqlalchemy.orm import relationship
 import datetime
-from ..database import BaseModel, Base
+from api.database import Base
+from api.baseModel import BaseModel
 
 
 class User(Base, BaseModel):
@@ -20,7 +21,7 @@ class User(Base, BaseModel):
     department = relationship("Department", back_populates="users")
     group = relationship("UserGroup", back_populates="user")
 
-class Profile(Base, BaseModel):
+class Profile(Base):
     __tablename__ = "profiles"
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
@@ -65,7 +66,7 @@ class GroupRole(Base, BaseModel):
 
 
 
-class UserGroup(Base, BaseModel):
+class UserGroup(Base):
     __tablename__ = "user_groups"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -74,7 +75,7 @@ class UserGroup(Base, BaseModel):
     group = relationship("Group", back_populates="user_group")
     user = relationship("User", back_populates="group")
 
-class Department(Base, BaseModel):
+class Department(Base):
     __tablename__ = "departments"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)

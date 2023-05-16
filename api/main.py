@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends
-from .authApp.view import router as authRouter
+from .authApp.views import router as authRouter
 
 
 description = """

@@ -1,6 +1,5 @@
-from sqlalchemy.orm import Session
-from .database import SessionLocal
-from pydantic import BaseModel
+from api.database import SessionLocal
+
 class CommonQueryParams:
     def __init__(self, skip: int = 0, limit: int = 100):
         self.skip = skip
@@ -18,4 +17,5 @@ def get_db():
     finally:
         db.close()
         
-        
+
+

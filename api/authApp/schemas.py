@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 import datetime
+from api.baseSchemas import BaseSchema
     
     
 class Token(BaseModel):
@@ -24,16 +25,10 @@ class Profile(BaseModel):
     dob: datetime.date
     class Config:
         orm_mode = True
-class User(BaseModel):
+class User(BaseSchema):
     email: str
     is_active: bool
-    deleted: bool = False
-    deleted_at: datetime.datetime | None = None
-    deleted_by: int | None = None
-    created_at: datetime.datetime
-    created_by: int|None=None
-    updated_at: datetime.datetime|None=None
-    updated_by: int|None=None
+    
 
 class CreateUser(User):
     hashed_password: str
@@ -48,7 +43,7 @@ class UserDetails(User):
         orm_mode = True
 
 
-class Permission(BaseModel):
+class Permission(BaseSchema):
     title:str
     description:str
     class Config:
@@ -65,7 +60,7 @@ class Role(BaseModel):
     class Config:
         orm_mode = True
 
-class RoleDetails(Role):
+class RoleDetails(Role, BaseSchema):
     id:int
     class Config:
         orm_mode = True
