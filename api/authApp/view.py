@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ..dependencies import CommonQueryParams, get_db, UserFilterDependency
+from ..dependencies import CommonQueryParams, get_db
+from .dependencies import UserFilterDependency
 from sqlalchemy.orm import Session
 from typing import Annotated
 from . import repository, schemas

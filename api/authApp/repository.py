@@ -9,7 +9,7 @@ from fastapi import HTTPException, status, Depends
 from .. import settings
 from sqlalchemy import or_, and_
 from .models import User, Profile
-from ..dependencies import UserFilterDependency
+from .dependencies import UserFilterDependency
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
