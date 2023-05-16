@@ -9,6 +9,7 @@ from fastapi import HTTPException, status, Depends
 from .. import settings
 from sqlalchemy import or_, and_
 from .models import User, Profile
+from ..dependencies import UserFilterDependency
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -92,8 +93,20 @@ def create_profile(db:Session, profile_obj:schemas.Profile):
     db.refresh(profile)
     return profile
 
-def get_users(db: Session, skip: int = 0, limit: int = settings.LIMIT, name:str='', email:str='', phone:str='', department:int = 0 ):
-    users = db.query(User).join(Profile).filter(or_(Profile.first_name.contains(name), Profile.last_name.contains(name), User.email.contains(email), Profile.phone.contains(phone), User.department_id == department)).offset(skip).limit(limit).all()
+def get_users(userFilter:UserFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
+    conditionList = list()
+    if(userFilter.name !=''):
+        conditionList.append(Profile.first_name.contains(userFilter.name))
+    if(userFilter.name !=''):
+        conditionList.append(Profile.last_name.contains(userFilter.name))
+    if(userFilter.email !=''):
+        conditionList.append(User.email==userFilter.email)
+    if(userFilter.phone !=''):
+        conditionList.append(Profile.phoone.contains(userFilter.phone))
+    if(userFilter.department !=0):
+        conditionList.append(User.department_id == userFilter.department)
+        
+    users = db.query(User).join(Profile).filter(and_(*tuple(conditionList))).offset(skip).limit(limit).all()
     return users
 
 def get_user_by_email(db:Session, email:str):
@@ -101,7 +114,7 @@ def get_user_by_email(db:Session, email:str):
     return user
 
 def get_user_by_name(db:Session, name:str):
-    users = db.query(User).join(Profile).filter(or_(Profile.first_name == name, Profile.last_name == name)).all()
+    users = db.query(User).join(Profile).filter(or_(Profile.first_name.contains(name), Profile.last_name.contains(name))).all()
     return users
 
 def get_user_by_id(db:Session, id:int):

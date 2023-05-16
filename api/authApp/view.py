@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from ..dependencies import CommonQueryParams, get_db
+from ..dependencies import CommonQueryParams, get_db, UserFilterDependency
 from sqlalchemy.orm import Session
 from typing import Annotated
 from . import repository, schemas
@@ -10,8 +10,8 @@ models.Base.metadata.create_all(bind=database.engine)
 router = APIRouter()
 
 @router.get("/users/", response_model=list[schemas.UserDetails], tags=["users"])
-async def getUsers(params: CommonQueryParams = Depends(CommonQueryParams), name:str='', email:str='', phone:str='', department:int = 0, db:Session = Depends(get_db)):
-    return repository.get_users(db, params.skip, params.limit, name, email, phone, department)
+async def getUsers(params: CommonQueryParams = Depends(CommonQueryParams), filter:UserFilterDependency = Depends(UserFilterDependency), db:Session = Depends(get_db)):
+    return repository.get_users(filter, db, params.skip, params.limit)
 
 @router.post("/user", response_model=schemas.UserDetails, tags=["users"])
 async def createUser(user:schemas.CreateUser, profile:schemas.Profile, db:Session = Depends(get_db)):
