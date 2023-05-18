@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
-from .authApp.views import router as authRouter
-
+from api.authApp.views import router as authRouter
+from api.authApp.permission.views import router as permissionRouter
+import uvicorn
 
 description = """
 This mini app help you to do authentication, authorization and user registration . 🚀
@@ -26,8 +27,15 @@ app.include_router(authRouter,
      prefix= "/users",
     tags= ["Users"]
     )
+app.include_router(permissionRouter,
+     prefix= "/permissions",
+    tags= ["Permissions"]
+    )
+
 
 @app.get("/")
 def main():
     return {"message": "Welcome to the authApp using FastAPI"}
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8100)

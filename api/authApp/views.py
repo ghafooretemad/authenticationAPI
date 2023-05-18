@@ -6,15 +6,10 @@ from typing import Annotated
 from api.authApp import repository, schemas
 from api import database
 from api.authApp import models
-from api.authApp.permission.views import router as permissionRouter
+
 models.Base.metadata.create_all(bind=database.engine)
 
 router = APIRouter()
-
-router.include_router(permissionRouter,
-     prefix= "/permission",
-    tags= ["Permission"]
-    )
 
 @router.get("/users/", response_model=list[schemas.UserDetails])
 async def getUsers(params: CommonQueryParams = Depends(CommonQueryParams), filter:UserFilterDependency = Depends(UserFilterDependency), db:Session = Depends(get_db)):

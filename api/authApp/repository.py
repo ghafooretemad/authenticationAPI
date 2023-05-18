@@ -10,7 +10,7 @@ from api import settings
 from sqlalchemy import or_, and_
 from api.authApp.models import User, Profile
 from api.authApp.dependencies import UserFilterDependency
-
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -93,20 +93,8 @@ def create_profile(db:Session, profile_obj:schemas.Profile):
     db.refresh(profile)
     return profile
 
-def get_users(userFilter:UserFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    conditionList = list()
-    if(userFilter.name !=''):
-        conditionList.append(Profile.first_name.contains(userFilter.name))
-    if(userFilter.name !=''):
-        conditionList.append(Profile.last_name.contains(userFilter.name))
-    if(userFilter.email !=''):
-        conditionList.append(User.email==userFilter.email)
-    if(userFilter.phone !=''):
-        conditionList.append(Profile.phoone.contains(userFilter.phone))
-    if(userFilter.department !=0):
-        conditionList.append(User.department_id == userFilter.department)
-        
-    users = db.query(User).join(Profile).filter(and_(*tuple(conditionList))).offset(skip).limit(limit).all()
+def get_users(userFilter:UserFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):        
+    users = db.query(User).join(Profile).filter(and_(*tuple(userFilter.prepareFilter()))).offset(skip).limit(limit).all()
     return users
 
 def get_user_by_email(db:Session, email:str):
