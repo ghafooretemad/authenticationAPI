@@ -15,8 +15,8 @@ async def getRole(params: CommonQueryParams = Depends(CommonQueryParams), filter
     return repository.get_role(filter, db, params.skip, params.limit)
 
 @router.post("/role", response_model=schemas.RoleDetails)
-async def createRole(user:schemas.Role, db:Session = Depends(get_db)):
-    return repository.create_role(db, user)
+async def createRole(role:schemas.Role, role_permission:list[schemas.RolePermission], db:Session = Depends(get_db)):
+    return repository.create_role(db, role, role_permission)
 
 @router.get("/role/id/{id}", response_model=schemas.RoleDetails)
 async def getRoleById(id:int, db:Session = Depends(get_db)):

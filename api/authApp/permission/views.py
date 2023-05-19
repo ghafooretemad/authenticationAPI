@@ -16,8 +16,8 @@ async def getPermission(params: CommonQueryParams = Depends(CommonQueryParams), 
     return repository.get_permission(filter, db, params.skip, params.limit)
 
 @router.post("/permission", response_model=schemas.PermissionDetails)
-async def createPermission(user:schemas.Permission, db:Session = Depends(get_db)):
-    return repository.create_permission(db, user)
+async def createPermission(permission:schemas.Permission, db:Session = Depends(get_db)):
+    return repository.create_permission(db, permission)
 
 @router.get("/permission/id/{id}", response_model=schemas.PermissionDetails)
 async def getPermissionById(id:int, db:Session = Depends(get_db)):

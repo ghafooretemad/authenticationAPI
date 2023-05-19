@@ -3,16 +3,18 @@ from api.authApp.role import schemas
 from sqlalchemy.orm import Session
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import Role
+from api.authApp.models import Role, RolePermission
 from api.authApp.dependencies import RoleFilterDependency
 
 
 
-def create_role(db:Session, role_obj:schemas.Role):
+def create_role(db:Session, role_obj:schemas.Role, role_permission:schemas.RolePermission):
     role = Role(**role_obj.dict())
     db.add(role)
     db.commit()
     db.refresh(role)
+    role_permissions_in_db = create_role_permission(db, role_permission, role.id)
+    role.permission = role_permissions_in_db
     return role
 
 def get_role(filter:RoleFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
@@ -46,3 +48,13 @@ def update_role(db: Session, id:int, role:schemas.RoleDetails):
     db.commit()
     db.refresh(role_in_db)
     return role_in_db
+
+def create_role_permission(db:Session, role_permissions:schemas.RolePermission, role:int):
+    role_permission_in_db:schemas.RolePermissionDetails = list()
+    for i in role_permissions:
+        role_permission = RolePermission(permission_id = i.permission_id, role_id = role)
+        db.add(role_permission)
+        db.commit()
+        db.refresh(role_permission)
+        role_permission_in_db.append(role_permission)
+    return role_permission_in_db

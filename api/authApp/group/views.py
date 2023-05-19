@@ -15,8 +15,8 @@ async def getGroup(params: CommonQueryParams = Depends(CommonQueryParams), filte
     return repository.get_group(filter, db, params.skip, params.limit)
 
 @router.post("/group", response_model=schemas.GroupDetails)
-async def createGroup(user:schemas.Group, db:Session = Depends(get_db)):
-    return repository.create_group(db, user)
+async def createGroup(group:schemas.Group, db:Session = Depends(get_db)):
+    return repository.create_group(db, group)
 
 @router.get("/group/id/{id}", response_model=schemas.GroupDetails)
 async def getGroupById(id:int, db:Session = Depends(get_db)):
