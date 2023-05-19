@@ -1,4 +1,4 @@
-from api.authApp.models import Profile, User
+from api.authApp.models import Profile, User, Permission
 
 
 class UserFilterDependency:
@@ -12,11 +12,20 @@ class UserFilterDependency:
     def prepareFilter(self):
         filterParams = list()
         for i in self.params:
-            if(i["value"] != ''):
-                filterParams.append(i["model"].contains(i["value"])) 
+            if (i["value"] != ''):
+                filterParams.append(i["model"].contains(i["value"]))
 
         return filterParams
 
+
 class PermissionFilterDependency:
     def __init__(self, name: str = ''):
-        self.name = name
+        self.params = [{"value": name, "model": Permission.title}]
+    
+    def prepareFilter(self):
+        filterParams = list()
+        for i in self.params:
+            if (i["value"] != ''):
+                filterParams.append(i["model"].contains(i["value"]))
+
+        return filterParams

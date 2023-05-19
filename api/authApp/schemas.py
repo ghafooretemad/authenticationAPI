@@ -55,7 +55,9 @@ class PermissionDetails(Permission):
     id:int
     class Config:
         orm_mode = True
-
+class PermissionList(BaseModel):
+    data:list[PermissionDetails] = []
+    total_records:int = 0
 class Role(BaseModel):
     title:str
     description:str

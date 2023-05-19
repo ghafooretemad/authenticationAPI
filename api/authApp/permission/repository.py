@@ -17,12 +17,10 @@ def create_permission(db:Session, permission_obj:schemas.Permission):
     return permission
 
 def get_permission(filter:PermissionFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    conditionList = list()
-    if(filter.name !=''):
-        conditionList.append(Permission.name.contains(filter.name))
-        
-    permissions = db.query(Permission).filter(and_(*tuple(conditionList))).offset(skip).limit(limit).all()
-    return permissions
+    permissions = db.query(Permission).filter(and_(*tuple(filter.prepareFilter())))
+    total = permissions.count()
+    filterd_permissions = permissions.offset(skip).limit(limit).all()
+    return {"total_records":total, "data":filterd_permissions}
 
 def get_permissionById(db: Session, id:int):
     permission = db.query(Permission).filter(Permission.id == id).first()

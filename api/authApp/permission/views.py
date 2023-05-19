@@ -11,7 +11,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 router = APIRouter()
 
-@router.get("/permission/", response_model=list[schemas.PermissionDetails])
+@router.post("/", response_model=schemas.PermissionList)
 async def getPermission(params: CommonQueryParams = Depends(CommonQueryParams), filter:PermissionFilterDependency = Depends(PermissionFilterDependency), db:Session = Depends(get_db)):
     return repository.get_permission(filter, db, params.skip, params.limit)
 
