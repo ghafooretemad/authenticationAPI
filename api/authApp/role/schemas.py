@@ -26,7 +26,7 @@ class Role(BaseModel):
 class RoleDetails(Role, BaseSchema):
     id: int
     # permission: list[RolePermissionDetails]
-    role_permission:list[RolePermissionDetails]
+    role_permissions:list[RolePermissionDetails]
     class Config:
         orm_mode = True
 

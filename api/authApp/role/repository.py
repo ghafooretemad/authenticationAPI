@@ -8,13 +8,13 @@ from api.authApp.dependencies import RoleFilterDependency
 
 
 
-def create_role(db:Session, role_obj:schemas.Role, role_permission:schemas.RolePermission):
+def create_role(db:Session, role_obj:schemas.Role, role_permissions:list[schemas.RolePermission]):
     role = Role(**role_obj.dict())
     db.add(role)
     db.commit()
     db.refresh(role)
-    role_permissions_in_db = create_role_permission(db, role_permission, role.id)
-    role.permission = role_permissions_in_db
+    role_permissions_in_db = create_role_permission(db, role_permissions, role.id)
+    role.role_permissions = role_permissions_in_db
     return role
 
 def get_role(filter:RoleFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
@@ -49,7 +49,7 @@ def update_role(db: Session, id:int, role:schemas.RoleDetails):
     db.refresh(role_in_db)
     return role_in_db
 
-def create_role_permission(db:Session, role_permissions:schemas.RolePermission, role:int):
+def create_role_permission(db:Session, role_permissions:list[schemas.RolePermission], role:int):
     role_permission_in_db:schemas.RolePermissionDetails = list()
     for i in role_permissions:
         role_permission = RolePermission(permission_id = i.permission_id, role_id = role)

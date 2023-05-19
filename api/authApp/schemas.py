@@ -46,18 +46,6 @@ class UserList(BaseModel):
     data:list[UserDetails] = []
     total_records:int = 0
         
-
-class GroupRole(BaseModel):
-    group:int
-    role:int
-    class Config:
-        orm_mode = True
-
-class GroupRoleDetails(GroupRole):
-    id:int
-    class Config:
-        orm_mode = True
-    
     
 class UserGroup(BaseModel):
     group:int

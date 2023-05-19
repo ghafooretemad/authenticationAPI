@@ -3,16 +3,19 @@ from api.authApp.group import schemas
 from sqlalchemy.orm import Session
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import Group
+from api.authApp.models import Group, GroupRole
 from api.authApp.dependencies import GroupFilterDependency
 
 
 
-def create_group(db:Session, group_obj:schemas.Group):
+def create_group(db:Session, group_obj:schemas.Group, group_roles:schemas.GroupRole):
     group = Group(**group_obj.dict())
     db.add(group)
     db.commit()
     db.refresh(group)
+    group_role_in_db = create_group_role(db, group_roles, group.id)
+    group.group_roles = group_role_in_db
+    
     return group
 
 def get_group(filter:GroupFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
@@ -46,3 +49,13 @@ def update_group(db: Session, id:int, group:schemas.GroupDetails):
     db.commit()
     db.refresh(group_in_db)
     return group_in_db
+
+def create_group_role(db:Session, group_roles:schemas.GroupRole, group:int):
+    group_role_in_db:schemas.GroupRoleDetails = list()
+    for i in group_roles:
+        group_role = GroupRole(role_id = i.role_id, group_id = group)
+        db.add(group_role)
+        db.commit()
+        db.refresh(group_role)
+        group_role_in_db.append(group_role)
+    return group_role_in_db

@@ -43,12 +43,12 @@ class Role(Base, BaseModel):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
-    role_permission = relationship("RolePermission", back_populates="roles") 
+    role_permissions = relationship("RolePermission", back_populates="roles") 
 class RolePermission(Base):
     __tablename__ = "role_permissions"
     id = Column(Integer, primary_key=True, index=True)
     role_id = Column(Integer, ForeignKey("roles.id"))
-    roles = relationship("Role", back_populates="role_permission")
+    roles = relationship("Role", back_populates="role_permissions")
     permissions = relationship("Permission")
     permission_id = Column(Integer, ForeignKey("permissions.id"))
 class Group(Base, BaseModel):
@@ -57,13 +57,15 @@ class Group(Base, BaseModel):
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
     user_group = relationship("UserGroup", back_populates="group")
+    group_roles = relationship("GroupRole", back_populates="groups")
+
    
 class GroupRole(Base, BaseModel):
     __tablename__ = "group_roles"
     id = Column(Integer, primary_key=True, index=True)
     role_id = Column(Integer, ForeignKey("roles.id"))
     group_id = Column(Integer, ForeignKey("groups.id"))
-
+    groups = relationship("Group", back_populates="group_roles")
 
 
 class UserGroup(Base):
