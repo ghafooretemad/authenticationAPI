@@ -42,7 +42,9 @@ class UserDetails(User):
     class Config:
         orm_mode = True
 
-
+class UserList(BaseModel):
+    data:list[UserDetails] = []
+    total_records:int = 0
 class Permission(BaseSchema):
     title:str
     description:str
