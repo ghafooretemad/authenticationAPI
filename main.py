@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from api.authApp.views import router as authRouter
 from api.authApp.permission.views import router as permissionRouter
+from api.authApp.group.views import router as groupRouter
 import uvicorn
 
 description = """
@@ -32,6 +33,9 @@ app.include_router(permissionRouter,
     tags= ["Permissions"]
     )
 
+app.include_router(groupRouter,
+                   prefix="/groups",
+                   tags=["Groups"])
 
 @app.get("/")
 def main():

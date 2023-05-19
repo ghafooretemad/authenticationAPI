@@ -1,7 +1,6 @@
 from datetime import datetime
-from api.authApp import schemas
+from api.authApp.permission import schemas
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, Depends
 from api import settings
 from sqlalchemy import or_, and_
 from api.authApp.models import Permission

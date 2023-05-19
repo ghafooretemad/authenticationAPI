@@ -4,7 +4,7 @@ from api.authApp.dependencies import PermissionFilterDependency
 from sqlalchemy.orm import Session
 from typing import Annotated
 from api.authApp.permission import repository
-from api.authApp import schemas
+from api.authApp.permission import schemas
 from api import database
 from api.authApp import models
 models.Base.metadata.create_all(bind=database.engine)

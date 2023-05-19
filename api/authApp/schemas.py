@@ -45,19 +45,6 @@ class UserDetails(User):
 class UserList(BaseModel):
     data:list[UserDetails] = []
     total_records:int = 0
-class Permission(BaseSchema):
-    title:str
-    description:str
-    class Config:
-        orm_mode = True
-
-class PermissionDetails(Permission):
-    id:int
-    class Config:
-        orm_mode = True
-class PermissionList(BaseModel):
-    data:list[PermissionDetails] = []
-    total_records:int = 0
 class Role(BaseModel):
     title:str
     description:str
@@ -80,17 +67,6 @@ class RolePermissionDetails(RolePermission):
     class Config:
         orm_mode = True
 
-
-class Group(BaseModel):
-    title:str
-    description:str
-    class Config:
-        orm_mode = True
-
-class GroupDetails(Group):
-    id:int
-    class Config:
-        orm_mode = True
 class GroupRole(BaseModel):
     group:int
     role:int
