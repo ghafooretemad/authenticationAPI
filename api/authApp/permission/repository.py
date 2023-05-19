@@ -27,12 +27,8 @@ def get_permissionById(db: Session, id:int):
 
 def delete_permission(db: Session, id:int):
     permission = get_permissionById(db, id)
-    permission.deleted = True
-    permission.deleted_by = None
-    permission.deleted_at = datetime.utcnow()
-    db.add(permission)
+    permission.delete()
     db.commit()
-    db.refresh(permission)
     return permission
 
 

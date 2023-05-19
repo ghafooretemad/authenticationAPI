@@ -32,3 +32,11 @@ async def deleteRole(id:int, db:Session = Depends(get_db)):
 @router.put("/role/update/{id}", response_model=schemas.RoleDetails)
 async def updateRole(id:int, role:schemas.RoleDetails, db:Session = Depends(get_db)):
     return repository.update_role(db, id, role)
+
+@router.post("/role-permission/update/{id}")
+async def updateRolePermission(role_id:int, role_permissions:list[schemas.RolePermission], db:Session = Depends(get_db)):
+    return repository.create_role_permission(db, role_permissions, role_id)
+
+@router.put("/role-permission/delete/{id}")
+async def deleteRolePermission(id:int, db:Session = Depends(get_db)):
+    return repository.delete_role_permission(db, id)

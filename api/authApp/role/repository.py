@@ -58,3 +58,11 @@ def create_role_permission(db:Session, role_permissions:list[schemas.RolePermiss
         db.refresh(role_permission)
         role_permission_in_db.append(role_permission)
     return role_permission_in_db
+
+def delete_role_permission(db:Session, id:int):
+    role_permission = db.query(RolePermission).filter(RolePermission.id ==id).first()
+    db.delete(role_permission)
+    db.commit()
+    return role_permission
+    
+    

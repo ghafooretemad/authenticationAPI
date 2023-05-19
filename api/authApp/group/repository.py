@@ -59,3 +59,9 @@ def create_group_role(db:Session, group_roles:schemas.GroupRole, group:int):
         db.refresh(group_role)
         group_role_in_db.append(group_role)
     return group_role_in_db
+
+def delete_group_role(db:Session, id:int):
+    group_role = db.query(GroupRole).filter(GroupRole.id ==id).first()
+    db.delete(group_role)
+    db.commit()
+    return group_role
