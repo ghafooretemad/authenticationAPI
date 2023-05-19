@@ -45,16 +45,6 @@ class UserDetails(User):
 class UserList(BaseModel):
     data:list[UserDetails] = []
     total_records:int = 0
-class Role(BaseModel):
-    title:str
-    description:str
-    class Config:
-        orm_mode = True
-
-class RoleDetails(Role, BaseSchema):
-    id:int
-    class Config:
-        orm_mode = True
         
 class RolePermission(BaseModel):
     role:int
