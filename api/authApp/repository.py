@@ -11,6 +11,7 @@ from sqlalchemy import or_, and_
 from api.authApp.models import User, Profile, UserGroup
 from api.authApp.dependencies import UserFilterDependency
 from fastapi_pagination.ext.sqlalchemy import paginate
+from api.settings import ACCESS_TOKEN_EXPIRE_MINUTES
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -24,13 +25,13 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db:Session, username: str):
-    user = db.query(User).filter(User.username == username).first()
+def get_user(db:Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
     return user
 
 
-def authenticate_user(db:Session, username: str, password: str):
-    user = get_user(db, username)
+def authenticate_user(db:Session, email: str, password: str):
+    user = get_user(db, email)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -38,7 +39,8 @@ def authenticate_user(db:Session, username: str, password: str):
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict):
+    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -57,13 +59,13 @@ async def get_current_user(db: Session, token: Annotated[str, Depends(oauth2_sch
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        email: str = payload.get("sub")
+        if email is None:
             raise credentials_exception
-        token_data = schemas.TokenData(username=username)
+        token_data = schemas.TokenData(email=email)
     except JWTError:
         raise credentials_exception
-    user = get_user(db, username=token_data.username)
+    user = get_user(db, email=token_data.email)
     if user is None:
         raise credentials_exception
     return user
@@ -72,7 +74,7 @@ async def get_current_user(db: Session, token: Annotated[str, Depends(oauth2_sch
 async def get_current_active_user(
     current_user: Annotated[schemas.User, Depends(get_current_user)]
 ):
-    if current_user.disabled:
+    if current_user.is_active == False:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
