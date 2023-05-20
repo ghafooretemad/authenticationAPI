@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Depends
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import User, Profile
+from api.authApp.models import User, Profile, UserGroup
 from api.authApp.dependencies import UserFilterDependency
 from fastapi_pagination.ext.sqlalchemy import paginate
 
@@ -77,13 +77,14 @@ async def get_current_active_user(
     return current_user
 
 
-def create_user(db:Session, user_obj:schemas.CreateUser, profile_id, department_id):
+def create_user(db:Session, user_obj:schemas.UserCreate, profile_id, user_group:list[schemas.UserGroup]):
     hashed_password = get_password_hash(user_obj.hashed_password)
     user_obj.hashed_password = hashed_password
-    user = User(**user_obj.dict(), profile_id=profile_id, department_id=department_id)
+    user = User(**user_obj.dict(), profile_id=profile_id)
     db.add(user)
     db.commit()
     db.refresh(user)
+    create_user_Group(db, user_group, user.id)
     return user
 
 def create_profile(db:Session, profile_obj:schemas.Profile):
@@ -110,3 +111,29 @@ def get_user_by_name(db:Session, name:str):
 def get_user_by_id(db:Session, id:int):
     user = db.query(User).filter(User.id == id).first()
     return user
+
+def update_user(db: Session, id:int, user:schemas.UserCreate):
+    user_in_db = get_user_by_id(db, id)
+    user_in_db.email = user.email
+    user_in_db.department_id = user.department_id
+    user_in_db.preference = user.preference
+    user_in_db.is_active = user.is_active
+    user_in_db.updated_by = None
+    user_in_db.updated_at = datetime.utcnow()
+    db.add(user_in_db)
+    db.commit()
+    db.refresh(user_in_db)
+    return user_in_db
+
+def create_user_Group(db:Session, user_groups:list[schemas.UserGroup], user_id:int):
+    for i in user_groups:
+        user_group = UserGroup(group_id = i.group_id, user_id = user_id)
+        db.add(user_group)
+        db.commit()
+    return True
+
+def delete_user_group(db:Session, id:int):
+    user_group = db.query(UserGroup).filter(UserGroup.id ==id).first()
+    db.delete(user_group)
+    db.commit()
+    return True
