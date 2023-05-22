@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Depends
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import User, Profile, UserGroup
+from api.authApp.models import User, Profile, UserGroup, Permission, UserGroup, GroupRole, RolePermission, Role, Group
 from api.authApp.dependencies import UserFilterDependency
 from fastapi_pagination.ext.sqlalchemy import paginate
 from api.settings import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -130,6 +130,7 @@ def update_user(db: Session, id:int, user:schemas.UserCreate):
 def create_user_Group(db:Session, user_groups:list[schemas.UserGroup], user_id:int):
     for i in user_groups:
         user_group = UserGroup(group_id = i.group_id, user_id = user_id)
+        user_group.created_at = datetime.utcnow()
         db.add(user_group)
         db.commit()
     return True
@@ -139,3 +140,7 @@ def delete_user_group(db:Session, id:int):
     db.delete(user_group)
     db.commit()
     return True
+
+def get_user_permission(db:Session, user_id:int):
+    permissions = db.query(Permission).join(RolePermission).join(Role).join(GroupRole).join(Group).join(UserGroup).filter(UserGroup.user_id == user_id).all()
+    return permissions

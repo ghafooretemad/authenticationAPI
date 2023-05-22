@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from api.authApp import repository, schemas
 from api import database
 from api.authApp import models
-
+from api.authApp.permission.schemas import  UserPermission
 models.Base.metadata.create_all(bind=database.engine)
 
 router = APIRouter()
@@ -47,13 +47,15 @@ async def updateUser(id: int, user: schemas.UserCreate, db: Session = Depends(ge
 
 
 @router.post("/user-group/update/{id}")
-async def updateUserGroup(user_group_id: int, user_group: list[schemas.UserGroup], db: Session = Depends(get_db)):
-    return repository.create_user_Group(db, user_group, user_group_id)
+async def updateUserGroup(user_id: int, user_group: list[schemas.UserGroup], db: Session = Depends(get_db)):
+    return repository.create_user_Group(db, user_group, user_id)
 
 
 @router.put("/user-group/delete/{id}")
 async def deleteUserGroup(id: int, db: Session = Depends(get_db)):
     return repository.delete_user_group(db, id)
 
-
+@router.get("/user-permission/{user_id}", response_model=list[UserPermission])
+async def getUserPermissions(user_id: int, db: Session = Depends(get_db)):
+    return repository.get_user_permission(db, user_id=user_id)
 

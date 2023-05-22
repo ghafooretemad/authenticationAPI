@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, DateTime
 import datetime
         
 class BaseModel:
-    deleted = Column(Boolean, default=False, nullable=False)
+    deleted = Column(Boolean, default=False, nullable=True)
     deleted_at = Column(DateTime, default=None, nullable=True )
     deleted_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)

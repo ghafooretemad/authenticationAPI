@@ -69,3 +69,4 @@ class UserGroupDetails(UserGroup):
 
     class Config:
         orm_mode = True
+    
