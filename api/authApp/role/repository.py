@@ -3,7 +3,7 @@ from api.authApp.role import schemas
 from sqlalchemy.orm import Session
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import Role, RolePermission
+from api.authApp.models import Role, RolePermission, Permission
 from api.authApp.dependencies import RoleFilterDependency
 
 
@@ -65,4 +65,6 @@ def delete_role_permission(db:Session, id:int):
     db.commit()
     return role_permission
     
-    
+def get_role_permission(db:Session, role_id:int):
+    role_permission = db.query(Permission).join(RolePermission).filter(RolePermission.role_id ==role_id).all()
+    return role_permission

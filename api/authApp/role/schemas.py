@@ -34,3 +34,10 @@ class RoleDetails(Role, BaseSchema):
 class RoleList(BaseModel):
     data: list[RoleDetails] = []
     total_records: int = 0
+
+class RolePermissionList(BaseModel):
+    id: int
+    title: str
+    description: str
+    class Config:
+        orm_mode = True

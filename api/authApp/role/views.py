@@ -40,3 +40,8 @@ async def updateRolePermission(role_id:int, role_permissions:list[schemas.RolePe
 @router.put("/role-permission/delete/{id}")
 async def deleteRolePermission(id:int, db:Session = Depends(get_db)):
     return repository.delete_role_permission(db, id)
+
+
+@router.get("/role-permission/{id}", response_model=list[schemas.RolePermissionList])
+async def getRolePermission(role_id:int, db:Session = Depends(get_db)):
+    return repository.get_role_permission(db, role_id=role_id)
