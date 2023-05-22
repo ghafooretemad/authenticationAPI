@@ -40,3 +40,7 @@ async def updateGroupRole(group_id:int, group_roles:list[schemas.GroupRole], db:
 @router.put("/group-role/delete/{id}")
 async def deleteGroupRole(id:int, db:Session = Depends(get_db)):
     return repository.delete_group_role(db, id)
+
+@router.get("/group-role/{id}", response_model=list[schemas.GroupRoleList])
+async def getGroupRoles(group_id:int, db:Session = Depends(get_db)):
+    return repository.get_group_role(db, group_id=group_id)

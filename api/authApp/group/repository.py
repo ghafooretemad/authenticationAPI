@@ -3,7 +3,7 @@ from api.authApp.group import schemas
 from sqlalchemy.orm import Session
 from api import settings
 from sqlalchemy import or_, and_
-from api.authApp.models import Group, GroupRole
+from api.authApp.models import Group, GroupRole, Role
 from api.authApp.dependencies import GroupFilterDependency
 
 
@@ -64,4 +64,8 @@ def delete_group_role(db:Session, id:int):
     group_role = db.query(GroupRole).filter(GroupRole.id ==id).first()
     db.delete(group_role)
     db.commit()
+    return group_role
+
+def get_group_role(db:Session, group_id:int):
+    group_role = db.query(Role).join(GroupRole).filter(GroupRole.group_id ==group_id).all()
     return group_role

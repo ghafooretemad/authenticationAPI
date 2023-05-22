@@ -19,7 +19,7 @@ class Group(BaseModel):
     description:str
     class Config:
         orm_mode = True
-class GroupListForUser(BaseModel):
+class GroupRoleList(BaseModel):
     id:int
     title:str
     description:str
