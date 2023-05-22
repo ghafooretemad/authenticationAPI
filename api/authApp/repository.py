@@ -144,3 +144,7 @@ def delete_user_group(db:Session, id:int):
 def get_user_permission(db:Session, user_id:int):
     permissions = db.query(Permission).join(RolePermission).join(Role).join(GroupRole).join(Group).join(UserGroup).filter(UserGroup.user_id == user_id).all()
     return permissions
+
+def get_user_groups(db:Session, user_id:int):
+    user_groups = db.query(Group).join(UserGroup).filter(UserGroup.user_id == user_id).all()
+    return user_groups

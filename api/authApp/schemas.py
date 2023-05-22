@@ -40,13 +40,19 @@ class User(BaseModel):
 class UserCreate(User):
     hashed_password: str
 
+class UserGroup(BaseModel):
+    group_id: int
+
+    class Config:
+        orm_mode = True
+
 class UserDetails(User, BaseSchema):
     id: int
     avatar: str | None = None
     preference: str | None = None
     profile: Profile | None = None
     department: Department | None = None
-
+    group: UserGroup|None = None
     class Config:
         orm_mode = True
 
@@ -56,11 +62,6 @@ class UserList(BaseModel):
     total_records: int = 0
 
 
-class UserGroup(BaseModel):
-    group_id: int
-
-    class Config:
-        orm_mode = True
 
 
 class UserGroupDetails(UserGroup):
@@ -70,3 +71,18 @@ class UserGroupDetails(UserGroup):
     class Config:
         orm_mode = True
     
+class UserGroupList(BaseModel):
+    id:int
+    title:str
+    description:str
+    
+    class Config:
+        orm_mode = True
+        
+
+class UserPermission(BaseModel):
+    id: int
+    title:str
+    description:str
+    class Config:
+        orm_mode = True

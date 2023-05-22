@@ -19,7 +19,7 @@ class User(Base, BaseModel):
     avatar = Column(String, default=None, nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
     department = relationship("Department", back_populates="users")
-    group = relationship("UserGroup", back_populates="user")
+    groups = relationship("UserGroup", back_populates="user")
 
 class Profile(Base):
     __tablename__ = "profiles"
@@ -56,6 +56,7 @@ class Group(Base, BaseModel):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
+    
     user_group = relationship("UserGroup", back_populates="group")
     group_roles = relationship("GroupRole", back_populates="groups")
 
@@ -75,7 +76,7 @@ class UserGroup(Base):
     group_id = Column(Integer, ForeignKey("groups.id"))
 
     group = relationship("Group", back_populates="user_group")
-    user = relationship("User", back_populates="group")
+    user = relationship("User", back_populates="groups")
 
 class Department(Base):
     __tablename__ = "departments"

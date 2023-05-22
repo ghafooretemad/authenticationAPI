@@ -7,13 +7,6 @@ class Permission(BaseSchema):
     description:str
     class Config:
         orm_mode = True
-
-class UserPermission(BaseModel):
-    id: int
-    title:str
-    description:str
-    class Config:
-        orm_mode = True
         
 class PermissionDetails(Permission):
     id:int
