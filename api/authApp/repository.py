@@ -96,8 +96,8 @@ def create_profile(db:Session, profile_obj:schemas.Profile):
     db.refresh(profile)
     return profile
 
-def get_users(userFilter:UserFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):        
-    users = db.query(User).join(Profile).filter(and_(*tuple(userFilter.prepareFilter())))
+def get_users(userFilter:UserFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT): 
+    users = db.query(User).join(Profile).filter(and_(*tuple(userFilter.prepareFilter())) if userFilter.prepareFilter() else True)
     total = users.count()
     filterd_users = users.offset(skip).limit(limit).all()
     return {"total_records":total, "data":filterd_users}

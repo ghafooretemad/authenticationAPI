@@ -15,7 +15,7 @@ class UserFilterDependency:
             if (i["value"] != ''):
                 filterParams.append(i["model"].contains(i["value"]))
 
-        return filterParams
+        return filterParams if len(filterParams) > 0 else False
 
 
 class PermissionFilterDependency:
@@ -28,7 +28,7 @@ class PermissionFilterDependency:
             if (i["value"] != ''):
                 filterParams.append(i["model"].contains(i["value"]))
 
-        return filterParams
+        return filterParams if len(filterParams) >0 else False
 
 class GroupFilterDependency:
     def __init__(self, title: str = ''):
@@ -40,7 +40,7 @@ class GroupFilterDependency:
             if (i["value"] != ''):
                 filterParams.append(i["model"].contains(i["value"]))
 
-        return filterParams
+        return filterParams if len(filterParams) >0 else False
 
 class RoleFilterDependency:
     def __init__(self, title: str = ''):
@@ -52,4 +52,4 @@ class RoleFilterDependency:
             if (i["value"] != ''):
                 filterParams.append(i["model"].contains(i["value"]))
 
-        return filterParams
+        return filterParams if len(filterParams) >0 else False

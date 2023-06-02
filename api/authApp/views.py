@@ -15,7 +15,7 @@ async def getUsers(params: CommonQueryParams = Depends(CommonQueryParams), filte
     return repository.get_users(filter, db, params.skip, params.limit)
 
 
-@router.post("/user", response_model=schemas.UserDetails)
+@router.post("/user", response_model=schemas.UserDetails, status_code= 201)
 async def createUser(user: schemas.UserCreate, profile: schemas.Profile, user_group: list[schemas.UserGroup], db: Session = Depends(get_db)):
     user_in_db = repository.get_user_by_email(db, user.email)
     if (user_in_db):
