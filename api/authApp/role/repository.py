@@ -18,7 +18,7 @@ def create_role(db:Session, role_obj:schemas.Role, role_permissions:list[schemas
     return role
 
 def get_role(filter:RoleFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    roles = db.query(Role).filter(and_(*tuple(filter.prepareFilter())))
+    roles = db.query(Role).filter(and_(*tuple(filter.prepareFilter())) if filter.prepareFilter() else True)
     total = roles.count()
     filterd_roles = roles.offset(skip).limit(limit).all()
     return {"total_records":total, "data":filterd_roles}

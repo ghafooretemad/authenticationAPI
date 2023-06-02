@@ -52,7 +52,7 @@ class UserDetails(User, BaseSchema):
     preference: str | None = None
     profile: Profile | None = None
     department: Department | None = None
-    group: UserGroup|None = None
+    group: list[UserGroup]|None = None
     class Config:
         orm_mode = True
 

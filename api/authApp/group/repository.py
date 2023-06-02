@@ -19,7 +19,7 @@ def create_group(db:Session, group_obj:schemas.Group, group_roles:schemas.GroupR
     return group
 
 def get_group(filter:GroupFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    groups = db.query(Group).filter(and_(*tuple(filter.prepareFilter())))
+    groups = db.query(Group).filter(and_(*tuple(filter.prepareFilter())) if filter.prepareFilter() else True)
     total = groups.count()
     filterd_groups = groups.offset(skip).limit(limit).all()
     return {"total_records":total, "data":filterd_groups}

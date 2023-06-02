@@ -16,7 +16,7 @@ def create_permission(db:Session, permission_obj:schemas.Permission):
     return permission
 
 def get_permission(filter:PermissionFilterDependency, db: Session, skip: int = 0, limit: int = settings.LIMIT):
-    permissions = db.query(Permission).filter(and_(*tuple(filter.prepareFilter())))
+    permissions = db.query(Permission).filter(and_(*tuple(filter.prepareFilter())) if filter.prepareFilter() else True)
     total = permissions.count()
     filterd_permissions = permissions.offset(skip).limit(limit).all()
     return {"total_records":total, "data":filterd_permissions}
