@@ -3,6 +3,8 @@ from api.test_main import test_login, client
 from random import randint
 
 user = None
+sequence = randint(1, 1000)
+
 
 
 def test_user_list():
@@ -12,7 +14,6 @@ def test_user_list():
 
 
 def test_create_user():
-    sequence = randint(1, 1000)
 
     data = {
         "user": {
@@ -61,3 +62,16 @@ def test_get_user_details():
                           headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
+    
+def test_update_user():
+    data = {
+            "email": f"test{sequence}@gmail.com",
+            "is_active": True,
+            "department_id": 0,
+            "hashed_password": "secret"
+        }
+    
+    response = client.put(f"/users/user/update/{user['id']}", json = data, headers={"Authorization": f'bearer {test_login}'})
+    
+    assert response.status_code == 200 
+    

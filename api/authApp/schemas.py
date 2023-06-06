@@ -35,6 +35,7 @@ class User(BaseModel):
     email: str
     is_active: bool
     department_id: int | None = None
+    preference: str | None = None
 
 
 class UserCreate(User):
@@ -49,7 +50,6 @@ class UserGroup(BaseModel):
 class UserDetails(User, BaseSchema):
     id: int
     avatar: str | None = None
-    preference: str | None = None
     profile: Profile | None = None
     department: Department | None = None
     group: list[UserGroup]|None = None
