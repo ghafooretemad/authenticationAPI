@@ -32,7 +32,7 @@ async def getUserByUserId(userid: int, db: Session = Depends(get_db)):
     return user_in_db
 
 
-@router.get("/user/name/{name}", response_model=schemas.UserDetails)
+@router.get("/user/name/{name}", response_model=list[schemas.UserDetails])
 async def getUserByName(name: str, db: Session = Depends(get_db)):
     users_in_db = repository.get_user_by_name(db, name)
     if (not users_in_db):

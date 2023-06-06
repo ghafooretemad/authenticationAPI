@@ -12,7 +12,7 @@ def test_user_list():
 
 
 def test_create_user():
-    sequence = randint(1, 100)
+    sequence = randint(1, 1000)
 
     data = {
         "user": {
@@ -57,7 +57,7 @@ def test_get_user_details():
 
 
 def test_get_user_details():
-    response = client.get(f"/users/user/name/'Khan'",
+    response = client.get(f"/users/user/name/Test",
                           headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
