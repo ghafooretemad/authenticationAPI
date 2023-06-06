@@ -4,8 +4,7 @@ from random import randint
 
 user = None
 sequence = randint(1, 1000)
-
-
+group = None
 
 def test_user_list():
     response = client.post(
@@ -49,7 +48,6 @@ def test_create_user():
     assert response.status_code == 400
 
 
-
 def test_get_user_details():
     response = client.get(f"/users/user/userid/{user['id']}",
                           headers={"Authorization": f'bearer {test_login}'})
@@ -62,26 +60,63 @@ def test_get_user_details():
                           headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
-    
+
+
 def test_update_user():
     data = {
-            "email": f"test{sequence}@gmail.com",
-            "is_active": True,
-            "department_id": 0,
-            "hashed_password": "secret"
-        }
-    
-    response = client.put(f"/users/user/update/{user['id']}", json = data, headers={"Authorization": f'bearer {test_login}'})
-    
-    assert response.status_code == 200 
-    
+        "email": f"test{sequence}@gmail.com",
+        "is_active": True,
+        "department_id": 0,
+        "hashed_password": "secret"
+    }
+
+    response = client.put(f"/users/user/update/{user['id']}", json=data, headers={
+                          "Authorization": f'bearer {test_login}'})
+
+    assert response.status_code == 200
+
+
 def test_user_group_update():
     data = [
-  {
-    "group_id": 3
-  },
-  {
-    "group_id": 4
-  }
-]
-    client.post(f"/user-group/update/{user['id']}", json = data, headers={"Authorization": f'bearer {test_login}'})
+        {
+            "group_id": 3
+        },
+        {
+            "group_id": 4
+        }
+    ]
+    client.post(f"/user-group/update/{user['id']}", json=data,
+                headers={"Authorization": f'bearer {test_login}'})
+
+
+def test_group_create():
+    data = {
+        "group": {
+            "title": "Testing Group",
+            "description": "Testing Group description"
+        },
+        "group_role": [
+            {
+                "group_id": 0,
+                "role_id": 2
+            },
+            {
+                "group_id": 0,
+                "role_id": 5
+            }
+        ]
+    }
+    
+    response = client.post("/groups/group", json=data, headers={"Authorization": f'bearer {test_login}'})
+    
+    assert response.status_code == 200
+    
+    global group
+    
+    group = response.json()
+
+
+def test_user_group_delete():
+
+    response = client.put(f"/users/user-group/delete/{group['id']}", headers={"Authorization": f'bearer {test_login}'})
+    assert response.status_code == 200
