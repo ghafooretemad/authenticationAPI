@@ -75,3 +75,13 @@ def test_update_user():
     
     assert response.status_code == 200 
     
+def test_user_group_update():
+    data = [
+  {
+    "group_id": 3
+  },
+  {
+    "group_id": 4
+  }
+]
+    client.post(f"/user-group/update/{user['id']}", json = data, headers={"Authorization": f'bearer {test_login}'})
