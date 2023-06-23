@@ -10,7 +10,7 @@ models.Base.metadata.create_all(bind=database.engine)
 router = APIRouter()
 
 
-@router.post("/users/", response_model=schemas.UserList)
+@router.post("/", response_model=schemas.UserList)
 async def getUsers(params: CommonQueryParams = Depends(CommonQueryParams), filter: UserFilterDependency = Depends(UserFilterDependency), db: Session = Depends(get_db)):
     return repository.get_users(filter, db, params.skip, params.limit)
 

@@ -33,28 +33,28 @@ app = FastAPI(
               )
 
 app.include_router(authRouter,
-     prefix= "/users",
+     prefix= "/auth/users",
     tags= ["User Operations"],
     dependencies=[Depends(oauth2_scheme)]
     )
 app.include_router(permissionRouter,
-     prefix= "/permissions",
+     prefix= "/auth/permissions",
     tags= ["Permission Operations"],
     dependencies=[Depends(oauth2_scheme)],
     )
 
 app.include_router(groupRouter,
-                   prefix="/groups",
+                   prefix="/auth/groups",
                    tags=["Group Operations"],
                    dependencies=[Depends(oauth2_scheme)]
                                  )
 
 app.include_router(RoleRouter,
-                   prefix="/roles",
+                   prefix="/auth/roles",
                    tags=["Role Operations"],
                    dependencies=[Depends(oauth2_scheme)])
 
-@app.post("/token", response_model=Token)
+@app.post("/auth/token", response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],  db: Session = Depends(get_db)
 ):

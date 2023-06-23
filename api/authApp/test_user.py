@@ -8,7 +8,7 @@ group = None
 
 def test_user_list():
     response = client.post(
-        "/users/users/", headers={"Authorization": f'bearer {test_login}'})
+        "/auth/users/", headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 200
 
 
@@ -35,7 +35,7 @@ def test_create_user():
         ]
     }
 
-    response = client.post("/users/user", json=data,
+    response = client.post("/auth/users/user", json=data,
                            headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 201
@@ -43,20 +43,20 @@ def test_create_user():
     global user
     user = response.json()
     # check for duplicate user
-    response = client.post("/users/user", json=data,
+    response = client.post("/auth/users/user", json=data,
                            headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 400
 
 
 def test_get_user_details():
-    response = client.get(f"/users/user/userid/{user['id']}",
+    response = client.get(f"/auth/users/user/userid/{user['id']}",
                           headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
 
 
 def test_get_user_details():
-    response = client.get(f"/users/user/name/Test",
+    response = client.get(f"/auth/users/user/name/Test",
                           headers={"Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
@@ -70,7 +70,7 @@ def test_update_user():
         "hashed_password": "secret"
     }
 
-    response = client.put(f"/users/user/update/{user['id']}", json=data, headers={
+    response = client.put(f"/auth/users/user/update/{user['id']}", json=data, headers={
                           "Authorization": f'bearer {test_login}'})
 
     assert response.status_code == 200
@@ -107,7 +107,7 @@ def test_group_create():
         ]
     }
     
-    response = client.post("/groups/group", json=data, headers={"Authorization": f'bearer {test_login}'})
+    response = client.post("/auth/groups/group", json=data, headers={"Authorization": f'bearer {test_login}'})
     
     assert response.status_code == 200
     
@@ -118,24 +118,24 @@ def test_group_create():
 
 def test_user_group_delete():
 
-    response = client.put(f"/users/user-group/delete/{group['id']}", headers={"Authorization": f'bearer {test_login}'})
+    response = client.put(f"/auth/users/user-group/delete/{group['id']}", headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 200
 
 
 def test_user_group_get():
 
-    response = client.get(f"/users/user-group/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
+    response = client.get(f"/auth/users/user-group/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 200
     
-    response = client.get(f"/users/user-group/0", headers={"Authorization": f'bearer {test_login}'})
+    response = client.get(f"/auth/users/user-group/0", headers={"Authorization": f'bearer {test_login}'})
     assert response.json() == []
     
     
 
 def test_user_permission_get():
 
-    response = client.get(f"/users/user-permission/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
+    response = client.get(f"/auth/users/user-permission/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 200
     
-    response = client.get(f"/users/user-permission/0", headers={"Authorization": f'bearer {test_login}'})
+    response = client.get(f"/auth/users/user-permission/0", headers={"Authorization": f'bearer {test_login}'})
     assert response.json() == []
