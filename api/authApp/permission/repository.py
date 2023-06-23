@@ -27,7 +27,7 @@ def get_permissionById(db: Session, id:int):
 
 def delete_permission(db: Session, id:int):
     permission = get_permissionById(db, id)
-    permission.delete()
+    db.delete(permission)
     db.commit()
     return permission
 
