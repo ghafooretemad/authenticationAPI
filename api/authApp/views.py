@@ -59,5 +59,5 @@ async def getUserPermissions(user_id: int, db: Session = Depends(get_db)):
     return repository.get_user_permission(db, user_id=user_id)
 
 @router.get("/user-group/{user_id}", response_model=list[schemas.UserGroupList])
-async def getUserPermissions(user_id: int, db: Session = Depends(get_db)):
+async def getUserGroup(user_id: int, db: Session = Depends(get_db)):
     return repository.get_user_groups(db, user_id=user_id)

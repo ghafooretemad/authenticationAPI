@@ -120,3 +120,22 @@ def test_user_group_delete():
 
     response = client.put(f"/users/user-group/delete/{group['id']}", headers={"Authorization": f'bearer {test_login}'})
     assert response.status_code == 200
+
+
+def test_user_group_get():
+
+    response = client.get(f"/users/user-group/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
+    assert response.status_code == 200
+    
+    response = client.get(f"/users/user-group/0", headers={"Authorization": f'bearer {test_login}'})
+    assert response.json() == []
+    
+    
+
+def test_user_permission_get():
+
+    response = client.get(f"/users/user-permission/{user['id']}", headers={"Authorization": f'bearer {test_login}'})
+    assert response.status_code == 200
+    
+    response = client.get(f"/users/user-permission/0", headers={"Authorization": f'bearer {test_login}'})
+    assert response.json() == []
